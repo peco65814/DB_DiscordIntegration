@@ -5,7 +5,7 @@ from discord.ext import commands
 import pymysql
 
 #Credentials Section
-TOKEN = 'Nzc5MDk3MzQ1MzQ5Nzc5NDc2.X7bk8g.x5PnC_BVWSIGtsQWlgn41OZv67I'
+TOKEN = ''
 
 #Also Database Shit
 baseConnect = pymysql.connect(
