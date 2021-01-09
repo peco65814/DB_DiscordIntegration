@@ -5,6 +5,7 @@ from discord.ext import commands
 import pymysql
 import re
 import string
+import asyncio
 
 #Credentials Section
 TOKEN = ''
@@ -37,7 +38,7 @@ async def info(ctx):
 		>info - Displays This Message.
 		>creatures - Display available creatures.
 		>stats [creature] - Displays current stats of the specified creature.
-		>update [creature] [HP] [Stam] [Torpor] [Oxy] [Weight] [Dmg] [Speed] - Allow to change values for stat display.
+		>update [creature] [HP] [Stam] [Torpor] [Oxy] [Food] [Weight] [Dmg] [Speed] - Allow to change values for stat display.
 		""")
 	await ctx.send(embed=embedInfo)
 
@@ -65,7 +66,7 @@ async def creatures(ctx):
 @bot.command(name='stats') #3° try for stats display
 async def stats(ctx, creatureIntro):
 
-	sql = "SELECT creatureName, health, stamina, torpidity, oxygen, weight, melee_damage, movement_speed, url FROM jokerz.creature_stats WHERE  creatureName= '{}';".format(creatureIntro)
+	sql = "SELECT creatureName, health, stamina, torpidity, oxygen, food, weight, melee_damage, movement_speed, url FROM jokerz.creature_stats WHERE  creatureName= '{}';".format(creatureIntro)
 
 	cursor.execute(sql)
 	creatureStat_list = cursor.fetchone()
@@ -77,18 +78,19 @@ async def stats(ctx, creatureIntro):
 	embedInfo.add_field(name="Stamina", value="{:,}".format(creatureStat_list[2]))
 	embedInfo.add_field(name="Torpidity", value="{:,}".format(creatureStat_list[3]))
 	embedInfo.add_field(name="Oxygen", value="{:,}".format(creatureStat_list[4]))
+	embedInfo.add_field(name="Food", value="{:,}".format(creatureStat_list[5]))
 	embedInfo.add_field(name="Weight", value="{:,}".format(creatureStat_list[6]))
-	embedInfo.add_field(name="Melee Damage", value="{:,}%".format(creatureStat_list[6]))
-	embedInfo.add_field(name="Movement Speed", value="{:,}%".format(creatureStat_list[7]))
-	embedInfo.set_thumbnail(url='{}'.format(creatureStat_list[8]))
+	embedInfo.add_field(name="Melee Damage", value="{:,}%".format(creatureStat_list[7]))
+	embedInfo.add_field(name="Movement Speed", value="{:,}%".format(creatureStat_list[8]))
+	embedInfo.set_thumbnail(url='{}'.format(creatureStat_list[9]))
 
 	creatureStat_list = 0
 	await ctx.send(embed=embedInfo)
 
 @bot.command(name='update')
-async def update(ctx, creature, health, stamina, torpidity, oxygen, weight, meleeDamage, movementSpeed):
+async def update(ctx, creature, health, stamina, torpidity, oxygen, food, weight, meleeDamage, movementSpeed):
 
-	sql = "UPDATE jokerz.creature_stats set health='{}', stamina='{}', torpidity='{}', oxygen='{}', weight='{}', melee_damage='{}', movement_speed='{}' WHERE creatureName='{}' ".format(health, stamina, torpidity, oxygen, weight, meleeDamage, movementSpeed, creature)
+	sql = "UPDATE jokerz.creature_stats set health='{}', stamina='{}', torpidity='{}', oxygen='{}', food='{}', weight='{}', melee_damage='{}', movement_speed='{}' WHERE creatureName='{}' ".format(health, stamina, torpidity, oxygen, food, weight, meleeDamage, movementSpeed, creature)
 	cursor.execute(sql)
 
 
@@ -103,4 +105,4 @@ async def kako(ctx):
 	await ctx.send("Kakosaurio Rex Stats: -10 Cabello | 99.999% Macho Man | 100% CocoLiso")'''
 
 #Bot Initialization Section
-bot.run('')
+bot.run('') #Inserta tu token aqui
